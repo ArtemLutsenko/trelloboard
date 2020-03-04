@@ -35,8 +35,8 @@ const mutations = {
       return newList;
     });
     state.dashboard = newData;
-  }
-};
+  },
+}
 const actions = {
   fetchData: ({ commit }) => {
     Vue.http
@@ -48,8 +48,9 @@ const actions = {
       .catch(error => {
         console.log(error);
       });
-  }
-};
+  },
+}
+
 
 export default {
   state,

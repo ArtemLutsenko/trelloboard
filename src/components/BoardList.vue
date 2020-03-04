@@ -1,6 +1,8 @@
 <template>
   <div class="list">
-    <div :class="listInfo.bg" class="title">{{ listInfo.title }}</div>
+    <div :class="listInfo.bg" class="title">
+      {{ listInfo.title }} ({{ count }})
+    </div>
     <div class="card-wrapper" @change="changeList">
       <draggable
         group="cards"
@@ -32,6 +34,7 @@ import appCard from "./Card";
 import appAddCard from "./addCard";
 import draggable from "vuedraggable";
 import { mapGetters } from "vuex";
+import {mapActions} from "vuex"
 
 export default {
   props: ["list"],
@@ -42,7 +45,8 @@ export default {
   },
   data() {
     return {
-      addCard: false
+      addCard: false,
+      count: this.list.cards.length
     };
   },
   computed: {
@@ -52,19 +56,23 @@ export default {
     }
   },
   methods: {
+      ...mapActions({ changeCardPosition: "changeCardPosition" }),
     addCardToggle() {
       this.addCard = !this.addCard;
     },
     changeList(evt) {
-     if (evt.item) {
-         let listId = evt.to.id;
+      if (evt.item) {
+        let listId = evt.to.id;
         let cardId = evt.item.id;
-        let request = `cards/${cardId}/idList?value=${listId}&key=${this.key}&token=${this.token}`;
-
-        this.$http.put(request).catch(error => {
-          console.log(error);
-        }); 
-      } 
+        this.$http
+          .put(
+            `cards/${cardId}/idList?value=${listId}&key=${this.key}&token=${this.token}`
+          )
+          .catch(error => {
+            console.log(error);
+          });  
+   
+      }
     }
   }
 };
